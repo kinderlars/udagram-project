@@ -8,18 +8,43 @@ import Jimp = require('jimp');
 //    inputURL: string - a publicly accessible url to an image file
 // RETURNS
 //    an absolute path to a filtered image locally saved file
-export async function filterImageFromURL(inputURL: string): Promise<string>{
-    return new Promise( async resolve => {
-        const photo = await Jimp.read(inputURL);
-        const outpath = '/tmp/filtered.'+Math.floor(Math.random() * 2000)+'.jpg';
-        await photo
-        .resize(256, 256) // resize
-        .quality(60) // set JPEG quality
-        .greyscale() // set greyscale
-        .write(__dirname+outpath, (img)=>{
-            resolve(__dirname+outpath);
-        });
+export async function filterImageFromURL(inputURL: string): Promise<string> {
+    return new Promise(async (resolve, reject) => {
+        Jimp.read(inputURL).then(photo => {
+            const outpath = '/tmp/filtered.' + Math.floor(Math.random() * 2000) + '.jpg';
+            photo
+            .resize(256, 256) // resize
+            .quality(60) // set JPEG quality
+            .greyscale() // set greyscale
+            .write(__dirname + outpath, (img) => {
+                resolve(__dirname + outpath);
+            });
+        }).catch(err => {
+            console.error(err);
+            reject("Could not read image.");
+        })
     });
+}
+
+
+export function isUrl(inputURL: string) {
+    var regexp = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/
+    return regexp.test(inputURL);
+}
+
+export function getLocalFiles(){
+    const tmpFileDir = __dirname+'/tmp'
+    let files:string[] = fs.readdirSync(tmpFileDir);
+    console.log(tmpFileDir);
+
+    for(var i = 0; i < files.length; i++){
+        if(!files[i].includes("filtered.")){
+            files.splice(i,1);
+        }
+        files[i] = tmpFileDir+"/"+files[i];
+    }
+    console.info(files);
+    return files;
 }
 
 // deleteLocalFiles
