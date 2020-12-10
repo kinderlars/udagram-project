@@ -26,12 +26,11 @@ import {filterImageFromURL, deleteLocalFiles, isUrl, getLocalFiles} from './util
     }
 
     const filtered_path = await filterImageFromURL(image_url);
-    console.log(await deleteLocalFiles(getLocalFiles()));
-    console.info("File deleted.")
 
-    return res.sendFile(filtered_path);
-
-
+    return res.sendFile(filtered_path, () => {
+      deleteLocalFiles(getLocalFiles());
+      console.info("File deleted.")
+    });
   });
 
   // @TODO1 IMPLEMENT A RESTFUL ENDPOINT
