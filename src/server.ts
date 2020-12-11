@@ -8,7 +8,7 @@ import {filterImageFromURL, deleteLocalFiles, isUrl, getLocalFiles} from './util
   const app = express();
 
   // Set the network port
-  const port = process.env.PORT || 8082;
+  const port = process.env.PORT || 8080;
   
   // Use the body parser middleware for post requests
   app.use(bodyParser.json());
@@ -50,7 +50,7 @@ import {filterImageFromURL, deleteLocalFiles, isUrl, getLocalFiles} from './util
   /**************************************************************************** */
 
   //! END @TODO1
-  
+
   // Root Endpoint
   // Displays a simple message to the user
   app.get( "/", async ( req, res ) => {
